@@ -13,9 +13,9 @@ import { artworks } from "../data/artworks.json";
 
     <header class="intro">
       <div>
-        <p class="eyebrow">An artist's little corner of the internet</p>
+        <p class="eyebrow">An artist's portfolio</p>
         <h1>Lebbie the<br /><em>Stranger.</em></h1>
-        <p class="intro-copy">Characters, sketches &amp; curious little worlds.</p>
+        <p class="intro-copy">Characters, sketches &amp; little worlds.</p>
       </div>
       <div class="sketch-note" aria-hidden="true">
         <span>notes from the woods</span>
@@ -26,7 +26,7 @@ import { artworks } from "../data/artworks.json";
 
     <div class="section-heading" id="work">
       <h2>From the collection</h2>
-      <p>{artworks.length} {artworks.length === 1 ? 'piece' : 'pieces'} &middot; a work in progress</p>
+      <p>{artworks.length} {artworks.length === 1 ? 'piece' : 'pieces'} &middot; updated often</p>
     </div>
     <section aria-label="Artworks" class="gallery">
       {artworks.length > 0 ? artworks.map((art, index) => (
