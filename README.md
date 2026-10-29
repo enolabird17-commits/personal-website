@@ -1,4 +1,4 @@
-# Wrenn's Website
+# Lebbie_The_Stranger's Website
 
 The editable portfolio is an Astro project in `extraterrestrial-equinox/`.
 
