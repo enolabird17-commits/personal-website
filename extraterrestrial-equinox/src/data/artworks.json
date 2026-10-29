@@ -1,0 +1,16 @@
+{
+  "artworks": [
+    {
+      "title": "Mountains",
+      "image": "/artwork/36cf3eea-5063-4a22-8a8e-f086115259eb.jpg"
+    },
+    {
+      "title": "Field",
+      "image": "/field.jpeg"
+    },
+    {
+      "title": "Sunset",
+      "image": "/sunset.jpeg"
+    }
+  ]
+}

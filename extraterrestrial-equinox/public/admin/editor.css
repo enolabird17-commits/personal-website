@@ -1,0 +1,53 @@
+@import url('../theme.css');
+
+.topbar { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 24px 32px; border-bottom: 1px solid var(--line); }
+.brand { font: 1.3rem var(--serif); text-decoration: none; }
+.brand::before { content: '✷'; color: var(--ochre); margin-right: 10px; }
+.topbar-actions { display: flex; align-items: center; gap: 20px; font: 0.75rem var(--mono); }
+.topbar-actions button { padding: 8px 12px; font-size: 0.8rem; }
+main { max-width: 1000px; margin: auto; padding: 32px 28px 64px; }
+.auth-panel { position: relative; max-width: 470px; margin: 36px auto; padding: 38px; border: 2px solid var(--ink); border-radius: 2px 6px 3px 8px; background: var(--paper); color: var(--ink); box-shadow: 7px 8px 0 #22251b; }
+.auth-panel::before { content: ''; position: absolute; top: -13px; left: calc(50% - 38px); width: 76px; height: 25px; background: #b49a56ed; transform: rotate(-5deg); }
+.auth-panel::after { content: '✷'; position: absolute; right: 27px; top: 22px; color: var(--plum); font-size: 1.7rem; }
+.auth-panel form { margin-top: 28px; }
+.auth-panel button { width: 100%; }
+.heading { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin: 30px 0; }
+h1 { font: 400 clamp(2rem, 5vw, 3rem)/1.1 var(--serif); letter-spacing: -0.04em; margin: 12px 0 18px; }
+p { line-height: 1.65; }
+.eyebrow { font: 0.68rem/1.6 var(--mono); text-transform: uppercase; letter-spacing: 0.1em; color: var(--sage); }
+.auth-panel .eyebrow { color: var(--muted-ink); }
+button { cursor: pointer; border: 2px solid var(--ink); background: var(--plum); color: var(--paper-light); border-radius: 3px 6px 2px 5px; padding: 12px 18px; box-shadow: 2px 2px 0 var(--ink); }
+button:hover:not(:disabled) { background: #7a3a53; }
+button:disabled { opacity: 0.5; cursor: default; box-shadow: none; }
+.secondary { background: var(--paper); color: var(--ink); border-color: var(--ink); }
+.secondary:hover:not(:disabled) { background: var(--sage); }
+#status { min-height: 24px; color: var(--sage); font: 0.75rem/1.7 var(--mono); margin: 20px 0; }
+#error { color: #702a32; background: #f2d9cc; padding: 16px; border: 2px solid #702a32; border-radius: 3px; }
+#artworks { display: grid; gap: 24px; margin: 24px 0; }
+.artwork { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 28px; padding: 22px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); border-radius: 3px 8px 2px 6px; box-shadow: 5px 5px 0 #22251b; }
+.artwork:nth-child(even) { background: #d7dbc9; }
+.image-area { aspect-ratio: 1; background: var(--sage); display: grid; place-items: center; overflow: hidden; border: 1px solid var(--ink); }
+.image-area img { width: 100%; height: 100%; object-fit: contain; }
+.placeholder { padding: 16px; color: var(--muted-ink); font-family: var(--serif); font-style: italic; }
+.fields { min-width: 0; }
+label { display: block; font: 0.76rem var(--mono); margin-bottom: 20px; }
+input { display: block; width: 100%; margin-top: 8px; }
+input[type=text], input[type=password] { padding: 11px 12px; border: 1px solid var(--ink); border-radius: 2px; background: var(--paper-light); color: var(--ink); font: 1rem var(--sans); }
+input[type=file] { font-size: 0.8rem; }
+input[type=file]::file-selector-button { border: 1px solid var(--ink); padding: 8px 10px; margin-right: 10px; background: var(--sage); color: var(--ink); cursor: pointer; font-family: var(--mono); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions button { font: 0.7rem var(--mono); padding: 8px 12px; }
+.remove { margin-left: auto; color: var(--plum); }
+.hint { font: 0.7rem/1.6 var(--mono); color: var(--sage); }
+.auth-panel .hint { color: var(--muted-ink); }
+@media (max-width: 600px) {
+  .topbar { padding: 20px; gap: 12px; flex-wrap: wrap; }
+  .brand { font-size: 1.1rem; }
+  .topbar-actions { gap: 12px; }
+  .auth-panel { padding: 30px 24px; }
+  main { padding: 20px 20px 48px; }
+  .heading { align-items: flex-start; flex-direction: column; gap: 8px; }
+  .artwork { grid-template-columns: 1fr; gap: 20px; }
+  .image-area { max-height: 260px; aspect-ratio: auto; min-height: 180px; }
+  .image-area img { max-height: 260px; }
+}

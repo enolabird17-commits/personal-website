@@ -1,0 +1,36 @@
+:root {
+  --forest: #363c30;
+  --forest-light: #454c3c;
+  --paper: #e9e2ce;
+  --paper-light: #f4efdf;
+  --ink: #27291f;
+  --muted-ink: #5d604e;
+  --moss: #9ba48a;
+  --sage: #c3c9b3;
+  --ochre: #b49a56;
+  --plum: #642c43;
+  --line: #70775e;
+  --serif: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+  --sans: 'Trebuchet MS', Verdana, sans-serif;
+  --mono: 'Courier New', monospace;
+  font-family: var(--sans);
+  color: var(--paper);
+  background: var(--forest);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-image: radial-gradient(#e9e2ce09 0.7px, transparent 0.7px);
+  background-size: 7px 7px;
+}
+a { color: inherit; text-underline-offset: 5px; }
+button, input { font: inherit; }
+:focus-visible { outline: 3px solid var(--ochre); outline-offset: 5px; }
+::selection { background: var(--ochre); color: var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

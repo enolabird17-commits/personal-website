@@ -1,0 +1,106 @@
+@import url('./theme.css');
+
+.portfolio {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 48px;
+}
+.site-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+  font: 0.8rem var(--mono);
+}
+.site-brand { text-decoration: none; display: flex; align-items: center; gap: 10px; }
+.brand-mark { color: var(--ochre); font-size: 1.7rem; line-height: 1; }
+.nav-links { display: flex; gap: 28px; }
+.nav-links a { text-decoration: none; }
+.nav-links a:hover { color: var(--ochre); }
+.intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 260px;
+  align-items: center;
+  gap: 48px;
+  padding: 64px 0 68px;
+}
+.eyebrow { font: 0.68rem/1.6 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--sage); }
+.intro h1 { font: 400 clamp(3.5rem, 7vw, 6.5rem)/0.98 var(--serif); letter-spacing: -0.055em; margin: 24px 0; }
+.intro h1 em { font-weight: 400; color: var(--ochre); }
+.intro-copy { color: var(--sage); font-size: 0.95rem; line-height: 1.7; margin: 0; }
+.sketch-note {
+  position: relative;
+  width: 240px;
+  padding: 24px 20px 16px;
+  background: var(--sage);
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 6px 7px 0 #22251b;
+  transform: rotate(4deg);
+  text-align: center;
+}
+.sketch-note::before {
+  content: '';
+  position: absolute;
+  width: 72px;
+  height: 24px;
+  left: calc(50% - 36px);
+  top: -13px;
+  background: #b49a56e6;
+  transform: rotate(-8deg);
+}
+.sketch-note span { font: 0.65rem/1.5 var(--mono); }
+.sketch-note .note-drawing { display: block; width: 100%; height: 180px; object-fit: contain; margin: 4px auto; }
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 22px 0;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 24px;
+}
+.section-heading h2 { margin: 0; font: 400 1.65rem var(--serif); }
+.section-heading p { margin: 0; color: var(--sage); font: 0.67rem var(--mono); }
+.gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: 28px; padding: 12px 0 42px; }
+.gallery figure { min-width: 0; margin: 0; padding: 12px 12px 16px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); box-shadow: 5px 6px 0 #24271f; transform: rotate(-0.7deg); }
+.gallery figure:nth-child(3n + 2) { background: var(--sage); transform: rotate(0.8deg); }
+.gallery figure:nth-child(3n) { background: #c2ad70; transform: rotate(-0.4deg); }
+.gallery figure > a { display: block; border: 1px solid var(--ink); background: var(--paper-light); }
+.gallery figure > a:hover { outline: 3px solid var(--plum); outline-offset: 3px; }
+.gallery img { display: block; width: 100%; height: auto; }
+.gallery figcaption { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-top: 14px; }
+.caption-text { min-width: 0; }
+.work-number { display: block; font: 0.6rem var(--mono); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 5px; }
+.work-title { font: 1.35rem var(--serif); overflow-wrap: anywhere; }
+.work-arrow { font-size: 1.2rem; color: var(--plum); }
+.empty { grid-column: 1 / -1; padding: 42px 24px; border: 1px dashed var(--line); font: italic 1.3rem var(--serif); text-align: center; }
+.portfolio footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; border-top: 1px solid var(--line); margin-top: 28px; padding: 24px 0 32px; color: var(--sage); font: 0.67rem/1.7 var(--mono); }
+.portfolio footer p { margin: 0; }
+.preview-note { width: 100%; }
+.preview-note code { color: var(--paper); }
+@media (max-width: 900px) {
+  .portfolio { padding: 0 32px; }
+  .intro { grid-template-columns: minmax(0, 1fr) 200px; gap: 32px; }
+  .sketch-note { width: 190px; padding: 22px 12px 12px; }
+  .sketch-note .note-drawing { height: 150px; }
+  .gallery { gap: 20px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .portfolio { padding: 0 22px; }
+  .site-nav { padding: 22px 0; gap: 16px; align-items: flex-start; }
+  .site-brand { font-size: 0.65rem; overflow-wrap: anywhere; }
+  .nav-links { flex-direction: column; gap: 10px; font-size: 0.68rem; }
+  .intro { grid-template-columns: minmax(0, 1fr); gap: 40px; padding: 40px 0; }
+  .intro h1 { font-size: clamp(3.4rem, 14vw, 5rem); }
+  .intro .eyebrow { font-size: 0.62rem; }
+  .sketch-note { width: 175px; justify-self: end; margin: 0 12px 8px 0; }
+  .sketch-note .note-drawing { height: 120px; }
+  .gallery { grid-template-columns: minmax(0, 1fr); gap: 30px; }
+  .gallery figure { padding: 12px 12px 18px; }
+  .section-heading { padding: 22px 0 16px; }
+  .section-heading h2 { font-size: 1.5rem; }
+}
