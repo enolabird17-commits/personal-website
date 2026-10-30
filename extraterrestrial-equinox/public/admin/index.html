@@ -22,6 +22,7 @@
         <h1 id="auth-heading">Log in</h1>
         <p id="auth-description">Log in to edit your gallery.</p>
         <form id="auth-form">
+          <label id="setup-key-label" hidden>Private setup key<input id="setup-key" type="password" autocomplete="off" maxlength="256"></label>
           <label>Username<input id="username" name="username" type="text" autocomplete="username" maxlength="80" required></label>
           <label>Password<input id="password" name="password" type="password" autocomplete="current-password" maxlength="128" required></label>
           <label id="confirm-label" hidden>Confirm password<input id="confirm-password" type="password" autocomplete="new-password" maxlength="128"></label>
@@ -31,13 +32,24 @@
       </section>
       <section id="editor-view" hidden>
         <div class="heading">
-        <div><p class="eyebrow">Portfolio editor · Local</p><h1>Your gallery</h1>
+        <div><p class="eyebrow" id="editor-mode">Portfolio editor</p><h1>Your gallery</h1>
           <p>Add artwork, change titles, and arrange your gallery.</p></div>
         <button id="save" type="button" disabled>Save changes</button>
       </div>
       <section id="artworks" aria-label="Edit artworks"></section>
       <button id="add" class="secondary" type="button" disabled>+ Add artwork</button>
-      <p class="hint">JPEG, PNG, GIF, or WebP · Up to 10 MB per image</p>
+      <p class="hint" id="upload-hint">JPEG, PNG, GIF, or WebP · Up to 4 MB per image online</p>
+      <details id="password-settings" class="password-settings" hidden>
+        <summary>Change your password</summary>
+        <form id="password-form">
+          <label>Current password<input id="current-password" type="password" autocomplete="current-password" maxlength="128" required></label>
+          <label>New password<input id="new-password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label>
+          <label>Confirm new password<input id="new-password-confirm" type="password" autocomplete="new-password" minlength="12" maxlength="128" required></label>
+          <p class="hint">Use 12–128 characters. Changing your password logs out your other sessions.</p>
+          <button id="change-password" type="submit">Update password</button>
+          <p id="password-status" role="status" aria-live="polite"></p>
+        </form>
+      </details>
       </section>
     </main>
     <template id="artwork-template">

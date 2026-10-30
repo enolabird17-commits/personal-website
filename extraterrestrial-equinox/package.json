@@ -8,11 +8,12 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "test:cms": "node --test tests/local-cms.test.mjs",
+    "test:cms": "node --test tests/*.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
   "dependencies": {
+    "@netlify/blobs": "^11.1.7",
     "astro": "^7.4.2"
   }
 }

@@ -26,9 +26,9 @@ import { artworks } from "../data/artworks.json";
 
     <div class="section-heading" id="work">
       <h2>From the collection</h2>
-      <p>{artworks.length} {artworks.length === 1 ? 'piece' : 'pieces'} &middot; updated often</p>
+      <p><span id="artwork-count">{artworks.length} {artworks.length === 1 ? 'piece' : 'pieces'}</span> &middot; updated often</p>
     </div>
-    <section aria-label="Artworks" class="gallery">
+    <section aria-label="Artworks" class="gallery" id="public-gallery">
       {artworks.length > 0 ? artworks.map((art, index) => (
         <figure>
           <a href={art.image} aria-label={`View ${art.title} full size`}>
@@ -47,4 +47,5 @@ import { artworks } from "../data/artworks.json";
       <a href="/admin/index.html">Portfolio editor</a>
     </footer>
   </main>
+  <script is:inline type="module" src="/gallery.js"></script>
 </Layout>

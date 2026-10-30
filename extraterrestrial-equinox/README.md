@@ -1,6 +1,44 @@
 # Lebbie the Stranger's Art Portfolio
 
-An Astro portfolio with a local gallery editor at `/admin/index.html`.
+An Astro portfolio with a gallery editor at `/admin/index.html`. On Netlify,
+the editor publishes image and title changes to the public website immediately.
+During local development, it edits the project files instead.
+
+## Public website editor on Netlify
+
+The repository-root `netlify.toml` configures the Astro build and the serverless
+function in `netlify/functions/portfolio-cms.mjs`. Netlify Blobs stores the live
+gallery, uploaded images, salted scrypt password hash, sessions, and login limits.
+These stores persist across production deploys. No GitHub token is needed.
+
+Set a private `PORTFOLIO_SETUP_KEY` of 24–256 characters in Netlify's environment
+variables, with Functions or all scopes enabled, and deploy `master`. Open the
+public site's `/admin/index.html`, enter the key, and choose your own username
+and 12–128 character password. After setup, the key is no longer needed and can
+be removed from Netlify. No visitor can create the account without that key.
+
+After logging in, edit titles, replace/upload images, add or remove artwork, and
+reorder the collection. Click **Save changes** to publish. Online uploads are
+limited to 4 MB per image to fit Netlify's binary request limit. Uploaded image
+URLs are public, while account data is served only through authenticated editor
+routes. Removing gallery entries keeps their uploaded images in storage.
+
+Use **Change your password** while logged in to choose a new password. It requires
+your current password and invalidates all other sessions. Sessions use Secure,
+HttpOnly, SameSite cookies, expire after eight hours, and survive function cold
+starts. Write requests require the same origin and a session CSRF token. Atomic
+conditional writes prevent stale gallery saves; persistent login limits prevent
+repeated password guesses across function instances.
+
+`public/gallery.js` refreshes the public gallery from `/portfolio-data` on page
+load and when returning to the tab. Uploaded images are served at
+`/portfolio-media/*`. Initial repository artwork is used until the first online
+save, and built HTML remains a fallback when the data endpoint is unavailable.
+Online edits do not modify the repository and take precedence over repository
+gallery changes after the first save. Preview deploys use isolated stores.
+
+See the parent README for first-time setup, account recovery, and moving data
+between Netlify projects. Hosting usage follows your Netlify plan.
 
 ## Run locally
 
@@ -96,6 +134,11 @@ logout, session expiry, server restarts, private-file blocking, and login rate l
 
 Deploy the generated `dist/` directory to a static host. If configuring the host
 from the parent folder, set its project root to `extraterrestrial-equinox`.
-Production builds contain the portfolio and static editor assets, but no file-writing
-API. The local editor needs `npm run dev` to save changes; rebuild and deploy after
-local edits to update the public site.
+Other static hosts can serve the built portfolio, but the online editor requires
+the included Netlify function and Blobs. Local edits still require a commit and
+deploy to update the built fallback; published online gallery edits remain in
+Netlify storage. `npm run preview` serves the static build without either backend.
+
+Hosted CMS tests use Netlify's real Blobs SDK and its local storage server. They
+verify setup protection, login/session persistence, image uploads, public saves,
+conflicts, password changes, logout, expiry, throttling, and deployment isolation.

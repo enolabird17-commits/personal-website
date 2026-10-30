@@ -12,6 +12,10 @@ const logoutButton = document.querySelector('#logout');
 const usernameInput = document.querySelector('#username');
 const passwordInput = document.querySelector('#password');
 const confirmInput = document.querySelector('#confirm-password');
+const setupKeyInput = document.querySelector('#setup-key');
+const passwordForm = document.querySelector('#password-form');
+let mode = 'local';
+let maxUpload = 10 * 1024 * 1024;
 let needsSetup = false;
 let authenticated = false;
 let artworks = [];
@@ -29,6 +33,7 @@ function updateControls() {
   saveButton.disabled = !authenticated || busy || !dirty;
   addButton.disabled = !authenticated || busy;
   logoutButton.disabled = busy;
+  passwordForm.querySelectorAll('input, button').forEach((control) => { control.disabled = busy; });
   cards.querySelectorAll('input, button').forEach((control) => { control.disabled = busy; });
   cards.querySelectorAll('article').forEach((card, index) => {
     card.querySelector('.up').disabled = busy || index === 0;
@@ -51,12 +56,16 @@ async function request(route, options = {}) {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) {
     if (response.status === 401 && !['login', 'setup'].includes(route)) await refreshAuth();
-    throw new Error(data.error || 'Start the site with npm run dev, then open this editor from the local URL.');
+    throw new Error(data.error || 'The editor could not connect. Check that the latest Netlify deploy has finished, then reload. For local editing, start npm run dev.');
   }
   return data;
 }
 
 function showAuth(data) {
+  passwordForm.reset();
+  document.querySelector('#password-status').textContent = '';
+  mode = data.mode ?? 'local';
+  maxUpload = data.maxUpload ?? 10 * 1024 * 1024;
   authenticated = false;
   token = data.token;
   needsSetup = data.needsSetup;
@@ -67,6 +76,9 @@ function showAuth(data) {
   document.querySelector('#auth-description').textContent = needsSetup
     ? 'Choose a username and password for your portfolio editor.' : 'Log in to edit your gallery.';
   document.querySelector('#confirm-label').hidden = !needsSetup;
+  document.querySelector('#setup-key-label').hidden = !data.setupKeyRequired;
+  setupKeyInput.required = Boolean(data.setupKeyRequired);
+  setupKeyInput.value = '';
   document.querySelector('#password-hint').hidden = !needsSetup;
   confirmInput.required = needsSetup;
   passwordInput.minLength = needsSetup ? 12 : 1;
@@ -75,10 +87,17 @@ function showAuth(data) {
   passwordInput.value = '';
   confirmInput.value = '';
   status.textContent = needsSetup ? 'Set up your editor login to get started.' : 'Login required to access the editor.';
+  if (data.setupKeyRequired) {
+    document.querySelector('#auth-description').textContent = data.setupConfigured
+      ? 'Enter your private Netlify setup key, then choose your editor username and password.'
+      : 'Add PORTFOLIO_SETUP_KEY in your Netlify environment variables with a private value of at least 24 characters, then redeploy. Use that key here to create your login.';
+  }
   updateControls();
 }
 
 async function openEditor(data) {
+  mode = data.mode ?? 'local';
+  maxUpload = data.maxUpload ?? 10 * 1024 * 1024;
   token = data.token;
   authenticated = true;
   // Preserve unsaved edits after a session expires; the revision check still applies.
@@ -91,7 +110,11 @@ async function openEditor(data) {
   editorView.hidden = false;
   logoutButton.hidden = false;
   render();
-  status.textContent = dirty ? 'Logged in. Your unsaved changes are ready to save.' : `Logged in as ${data.username}. Changes stay on this computer.`;
+  document.querySelector('#editor-mode').textContent = `Portfolio editor · ${mode === 'online' ? 'Live website' : 'Local'}`;
+  document.querySelector('#upload-hint').textContent = `JPEG, PNG, GIF, or WebP · Up to ${maxUpload / 1024 / 1024} MB per image`;
+  document.querySelector('#password-settings').hidden = mode !== 'online';
+  status.textContent = dirty ? 'Logged in. Your unsaved changes are ready to save.'
+    : `Logged in as ${data.username}. ${mode === 'online' ? 'Save changes to publish them to your website.' : 'Changes stay on this computer.'}`;
 }
 
 async function refreshAuth() {
@@ -111,13 +134,35 @@ authForm.addEventListener('submit', async (event) => {
   try {
     const data = await request(creating ? 'setup' : 'login', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: usernameInput.value.trim(), password: passwordInput.value }),
+      body: JSON.stringify({ username: usernameInput.value.trim(), password: passwordInput.value, ...(creating ? { setupKey: setupKeyInput.value } : {}) }),
     });
     passwordInput.value = '';
     confirmInput.value = '';
+    setupKeyInput.value = '';
     await openEditor(data);
   } catch (error) { showError(error.message); }
   finally { loginButton.disabled = false; }
+});
+
+passwordForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const passwordStatus = document.querySelector('#password-status');
+  const password = document.querySelector('#new-password').value;
+  if (password !== document.querySelector('#new-password-confirm').value) {
+    passwordStatus.textContent = 'The new passwords do not match.';
+    return;
+  }
+  busy = true;
+  updateControls();
+  passwordStatus.textContent = 'Updating password…';
+  try {
+    const data = await request('password', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ currentPassword: document.querySelector('#current-password').value, password }) });
+    token = data.token;
+    passwordForm.reset();
+    passwordStatus.textContent = 'Password updated. Your other sessions are now logged out.';
+  } catch (error) { passwordStatus.textContent = error.message; }
+  finally { busy = false; updateControls(); }
 });
 
 logoutButton.addEventListener('click', async () => {
@@ -157,7 +202,7 @@ function render() {
     upload.addEventListener('change', async () => {
       const file = upload.files[0];
       if (!file) return;
-      if (file.size > 10 * 1024 * 1024) { showError('Choose an image under 10 MB.'); upload.value = ''; return; }
+      if (file.size > maxUpload) { showError(`Choose an image under ${maxUpload / 1024 / 1024} MB.`); upload.value = ''; return; }
       busy = true;
       updateControls();
       showError();
@@ -214,7 +259,7 @@ saveButton.addEventListener('click', async () => {
     artworks = result.artworks;
     revision = result.revision;
     dirty = false;
-    status.textContent = 'Saved to your project. Your portfolio is up to date.';
+    status.textContent = mode === 'online' ? 'Published. Your public portfolio is up to date.' : 'Saved to your project. Your portfolio is up to date.';
     render();
   } catch (error) { showError(error.message); status.textContent = 'Changes could not be saved. Your edits are still here.'; }
   finally { busy = false; updateControls(); }
@@ -227,6 +272,6 @@ window.addEventListener('beforeunload', (event) => {
 try {
   await refreshAuth();
 } catch (error) {
-  status.textContent = 'The local editor is not connected.';
+  status.textContent = 'The portfolio editor is not connected.';
   showError(error.message);
 }
